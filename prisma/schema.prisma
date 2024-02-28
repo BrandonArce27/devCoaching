@@ -12,3 +12,146 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  email             String              @unique
+  lastName          String
+  password          String
+  role              String
+  createdAt         DateTime            @default(now())
+  UserKnowledge     UserKnowledge[]
+  Ticket            Ticket[]
+  Review            Review[]
+  UserAcademy       UserAcademy[]
+  UserExperience    UserExperience[]
+  UserShedule       UserShedule[]
+  TicketParticipant TicketParticipant[]
+}
+
+model Knowledge {
+  id               Int                @id @default(autoincrement())
+  title            String
+  difficulty       String
+  description      String
+  createdAt        DateTime           @default(now())
+  user             UserKnowledge[]
+  Ticket           Ticket[]
+  KnowledgeAcademy KnowledgeAcademy[]
+}
+
+model UserKnowledge {
+  id          Int       @id @default(autoincrement())
+  //Llaves foraneas
+  knowledgeId Int       @map("knowledge_id")
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id])
+  userId      Int       @map("user_id")
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Ticket {
+  id                Int                 @id @default(autoincrement())
+  title             String
+  description       String
+  status            String
+  priority          String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  //Llaves foraneas
+  userId            Int                 @map("user_id")
+  user              User                @relation(fields: [userId], references: [id])
+  knowledgeId       Int                 @map("knowledge_id")
+  knowledge         Knowledge           @relation(fields: [knowledgeId], references: [id])
+  Review            Review[]
+  Meeting           Meeting[]
+  TicketParticipant TicketParticipant[]
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  //Llaves foraneas
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  ticketId  Int      @map("ticket_id")
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+}
+
+model Academy {
+  id               Int                @id @default(autoincrement())
+  title            String
+  description      String
+  userId           Int
+  knowledgeId      Int
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  KnowledgeAcademy KnowledgeAcademy[]
+  UserAcademy      UserAcademy[]
+}
+
+model KnowledgeAcademy {
+  id          Int       @id @default(autoincrement())
+  //Llaves foraneas
+  academyId   Int       @map("academy_id")
+  academy     Academy   @relation(fields: [academyId], references: [id])
+  knowledgeId Int       @map("knowledge_id")
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id])
+}
+
+model UserAcademy {
+  id        Int     @id @default(autoincrement())
+  //Llaves foraneas
+  academyId Int     @map("academy_id")
+  academy   Academy @relation(fields: [academyId], references: [id])
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+model Meeting {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  userId      Int
+  knowledgeId Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  //Llaves foraneas
+  ticketId    Int      @map("ticket_id")
+  Ticket      Ticket   @relation(fields: [ticketId], references: [id])
+}
+
+model UserExperience {
+  id          Int      @id @default(autoincrement())
+  knowledgeId Int
+  experience  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  //Llaves foraneas
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model UserShedule {
+  id          Int      @id @default(autoincrement())
+  meetingId   Int
+  sheduleDate DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  //Llaves foraneas
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model TicketParticipant {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  //Llaves foraneas
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  ticketId  Int      @map("ticket_id")
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+}
