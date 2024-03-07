@@ -14,144 +14,100 @@ datasource db {
 }
 
 model User {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  email             String              @unique
-  lastName          String
-  password          String
-  role              String
-  createdAt         DateTime            @default(now())
-  UserKnowledge     UserKnowledge[]
-  Ticket            Ticket[]
-  Review            Review[]
-  UserAcademy       UserAcademy[]
-  UserExperience    UserExperience[]
-  UserShedule       UserShedule[]
-  TicketParticipant TicketParticipant[]
+  id         Int             @id @default(autoincrement())
+  uuid       String          @unique @default(uuid())
+  email      String          @unique
+  firstName  String          @map("first_name")
+  lastName   String          @map("last_name")
+  password   String
+  updatedAt  DateTime        @updatedAt @map("updated_at")
+  createdAt  DateTime        @default(now()) @map("created_at")
+  knowledges UserKnowledge[]
+  tickets    Ticket[]
+  reviews    Review[]
+  academies  UserAcademy[]
+  academy    Academy?
+
+  @@map("users")
 }
 
 model Knowledge {
-  id               Int                @id @default(autoincrement())
-  title            String
-  difficulty       String
-  description      String
-  createdAt        DateTime           @default(now())
-  user             UserKnowledge[]
-  Ticket           Ticket[]
-  KnowledgeAcademy KnowledgeAcademy[]
-}
+  id          Int             @id @default(autoincrement())
+  uuid        String          @unique @default(uuid())
+  academyId   Int             @map("academy_id")
+  title       String
+  description String
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  academy     Academy         @relation(fields: [academyId], references: [id])
+  users       UserKnowledge[]
+  tickets     Ticket[]
 
-model UserKnowledge {
-  id          Int       @id @default(autoincrement())
-  //Llaves foraneas
-  knowledgeId Int       @map("knowledge_id")
-  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id])
-  userId      Int       @map("user_id")
-  user        User      @relation(fields: [userId], references: [id])
+  @@map("knowledges")
 }
 
 model Ticket {
-  id                Int                 @id @default(autoincrement())
-  title             String
-  description       String
-  status            String
-  priority          String
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  //Llaves foraneas
-  userId            Int                 @map("user_id")
-  user              User                @relation(fields: [userId], references: [id])
-  knowledgeId       Int                 @map("knowledge_id")
-  knowledge         Knowledge           @relation(fields: [knowledgeId], references: [id])
-  Review            Review[]
-  Meeting           Meeting[]
-  TicketParticipant TicketParticipant[]
+  id          Int       @id @default(autoincrement())
+  uuid        String    @unique @default(uuid())
+  userId      Int       @map("user_id")
+  knowledgeId Int       @map("knowledge_id")
+  title       String
+  description String
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  owner       User      @relation(fields: [userId], references: [id])
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id])
+  reviews     Review[]
+
+  @@map("tickets")
 }
 
 model Review {
   id        Int      @id @default(autoincrement())
-  comment   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  //Llaves foraneas
+  uuid      String   @unique @default(uuid())
   userId    Int      @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
   ticketId  Int      @map("ticket_id")
+  comment   String
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
   ticket    Ticket   @relation(fields: [ticketId], references: [id])
+
+  @@map("reviews")
 }
 
 model Academy {
-  id               Int                @id @default(autoincrement())
-  title            String
-  description      String
-  userId           Int
-  knowledgeId      Int
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  KnowledgeAcademy KnowledgeAcademy[]
-  UserAcademy      UserAcademy[]
+  id         Int           @id @default(autoincrement())
+  uuid       String        @unique @default(uuid())
+  userId     Int           @unique @map("user_id")
+  name       String        @unique
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+  createdAt  DateTime      @default(now()) @map("created_at")
+  owner      User          @relation(fields: [userId], references: [id])
+  knowledges Knowledge[]
+  users      UserAcademy[]
+
+  @@map("academies")
 }
 
-model KnowledgeAcademy {
-  id          Int       @id @default(autoincrement())
-  //Llaves foraneas
-  academyId   Int       @map("academy_id")
-  academy     Academy   @relation(fields: [academyId], references: [id])
+model UserKnowledge {
+  userId      Int       @map("user_id")
   knowledgeId Int       @map("knowledge_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  user        User      @relation(fields: [userId], references: [id])
   knowledge   Knowledge @relation(fields: [knowledgeId], references: [id])
+
+  @@id([userId, knowledgeId])
+  @@map("users_knowledges")
 }
 
 model UserAcademy {
-  id        Int     @id @default(autoincrement())
-  //Llaves foraneas
-  academyId Int     @map("academy_id")
-  academy   Academy @relation(fields: [academyId], references: [id])
-  userId    Int     @map("user_id")
-  user      User    @relation(fields: [userId], references: [id])
-}
-
-model Meeting {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  userId      Int
-  knowledgeId Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  //Llaves foraneas
-  ticketId    Int      @map("ticket_id")
-  Ticket      Ticket   @relation(fields: [ticketId], references: [id])
-}
-
-model UserExperience {
-  id          Int      @id @default(autoincrement())
-  knowledgeId Int
-  experience  String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  //Llaves foraneas
-  userId      Int      @map("user_id")
-  user        User     @relation(fields: [userId], references: [id])
-}
-
-model UserShedule {
-  id          Int      @id @default(autoincrement())
-  meetingId   Int
-  sheduleDate DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  //Llaves foraneas
-  userId      Int      @map("user_id")
-  user        User     @relation(fields: [userId], references: [id])
-}
-
-model TicketParticipant {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  //Llaves foraneas
   userId    Int      @map("user_id")
+  academyId Int      @map("academy_id")
+  createdAt DateTime @default(now()) @map("created_at")
   user      User     @relation(fields: [userId], references: [id])
-  ticketId  Int      @map("ticket_id")
-  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  academy   Academy  @relation(fields: [academyId], references: [id])
+
+  @@id([userId, academyId])
+  @@map("users_academies")
 }
