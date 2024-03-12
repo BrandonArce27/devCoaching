@@ -16,6 +16,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*":["./src/*"],
+      "@api" : ["src/api/index.ts"],
+      "@decorators" : ["src/shared/decorators/index.ts"],
+      "@services" : ["src/shared/services/index.ts"]
+    }
   }
 }
