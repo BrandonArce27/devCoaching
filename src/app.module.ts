@@ -6,9 +6,9 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { UserModule } from '@api';
 
-import { AppController } from './app.controller';
+import { KnowledgeModule } from '@api';
 
-import { AppService } from './app.service';
+import { AcademyModule } from '@api';
 
 @Module({
   imports: [
@@ -18,8 +18,10 @@ import { AppService } from './app.service';
       driver: ApolloDriver,
     }),
     UserModule,
+    AcademyModule,
+    KnowledgeModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
