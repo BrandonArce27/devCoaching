@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { AcademyResolver } from './academy.resolver';
 
 import { AcademyService } from './academy.service';
