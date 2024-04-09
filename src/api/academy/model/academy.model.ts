@@ -1,5 +1,6 @@
-import { User } from '@/api/user/model';
 import { Field, ObjectType, Int } from '@nestjs/graphql';
+
+import { User } from '@/api/user/model';
 
 @ObjectType()
 export class Academy {
@@ -15,8 +16,8 @@ export class Academy {
   @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field(() => User, { nullable: true }) // relation with user.
-  user?: User;
+  @Field(() => User, { nullable: true })
+  owner?: User;
 
   @Field(() => Date, { nullable: true })
   createdAt?: Date;

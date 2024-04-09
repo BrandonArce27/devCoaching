@@ -1,9 +1,11 @@
+import { UserSelect } from '@/api/user/model';
+
 interface AcademyPrismaSelect {
   id?: boolean;
   uuid?: boolean;
   name?: boolean;
   userId?: boolean;
-  user?: boolean;
+  owner?: UserSelect;
   createdAt?: boolean;
   updatedAt?: boolean;
 }

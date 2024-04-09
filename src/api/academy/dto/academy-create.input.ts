@@ -1,6 +1,14 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
-import { MaxLength, MinLength } from 'class-validator';
+import { MaxLength } from 'class-validator';
+
+import { UserWhereUniqueInput } from '@/api/user/dto';
+
+@InputType()
+export class UserCreateNestedOneWithoutAcademyInput {
+  @Field(() => UserWhereUniqueInput)
+  connect: UserWhereUniqueInput;
+}
 
 @InputType()
 export class AcademyCreateInput {
@@ -8,8 +16,6 @@ export class AcademyCreateInput {
   @Field(() => String)
   name: string;
 
-  @MinLength(10)
-  @MaxLength(60)
-  @Field(() => Int)
-  userId: number;
+  @Field(() => UserCreateNestedOneWithoutAcademyInput)
+  owner: UserCreateNestedOneWithoutAcademyInput;
 }

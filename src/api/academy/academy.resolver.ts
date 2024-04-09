@@ -1,12 +1,21 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  Mutation,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
+
+import { GraphQLFields, IGraphQLFields } from 'src/shared/decorators';
+
+import { User } from 'src/api/user/model';
 
 import { Academy, AcademySelect } from './model';
 
 import { AcademyArgs, AcademyCreateInput } from './dto';
 
 import { AcademyService } from './academy.service';
-
-import { GraphQLFields, IGraphQLFields } from 'src/shared/decorators';
 
 @Resolver(() => Academy)
 export class AcademyResolver {
@@ -26,5 +35,13 @@ export class AcademyResolver {
     @GraphQLFields() { fields }: IGraphQLFields<AcademySelect>,
   ): Promise<Academy> {
     return this.academyService.create(data, fields);
+  }
+
+  @ResolveField()
+  async owner(@Parent() academy: Academy): Promise<User> {
+    // const { id } = academy;
+    console.log('academy', academy);
+    return null as User;
+    // this.postsService.findAll({ authorId: id });
   }
 }
