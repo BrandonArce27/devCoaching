@@ -32,7 +32,7 @@ type Academy {
   uuid: String
   userId: Int
   name: String
-  user: User
+  owner: User
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -75,7 +75,11 @@ input UserCreateInput {
 
 input AcademyCreateInput {
   name: String!
-  userId: Int!
+  owner: UserCreateNestedOneWithoutAcademyInput!
+}
+
+input UserCreateNestedOneWithoutAcademyInput {
+  connect: UserWhereUniqueInput!
 }
 
 input KnowledgeCreateInput {
