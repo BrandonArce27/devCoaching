@@ -8,11 +8,16 @@ import { UserService } from './user.service';
 
 import { GraphQLFields, IGraphQLFields } from '@decorators';
 
+import { UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from '@auth';
+
 @Resolver(() => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => User)
+  @UseGuards(JwtAuthGuard)
   public async user(
     @Args() args: UserArgs,
     @GraphQLFields() { fields }: IGraphQLFields<UserSelect>,
