@@ -18,10 +18,12 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*":["./src/*"],
-      "@api" : ["src/api/index.ts"],
+      "@/*":["src/*"],
+      "@api":["src/api/index.ts"],
       "@decorators" : ["src/shared/decorators/index.ts"],
-      "@services" : ["src/shared/services/index.ts"]
+      "@services" : ["src/shared/services/index.ts"],
+      "@auth" : ["src/shared/auth/index.ts"],
+      "@config" : ["src/shared/config/index.ts"]
     }
   }
 }
