@@ -1,8 +1,8 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 
 import { User, UserSelect } from './model';
 
-import { UserArgs, UserCreateInput } from './dto';
+import { UserCreateInput } from './dto';
 
 import { UserService } from './user.service';
 
@@ -10,19 +10,19 @@ import { GraphQLFields, IGraphQLFields } from '@decorators';
 
 import { UseGuards } from '@nestjs/common';
 
-import { JwtAuthGuard } from '@auth';
+import { AuthGuard, AuthUser } from '@auth';
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => User)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   public async user(
-    @Args() args: UserArgs,
+    @Context('user') user: AuthUser,
     @GraphQLFields() { fields }: IGraphQLFields<UserSelect>,
   ): Promise<User> {
-    return this.userService.findOne(args, fields);
+    return this.userService.findOne(fields, user);
   }
 
   @Mutation(() => User)
