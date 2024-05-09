@@ -68,16 +68,11 @@ type Review {
 }
 
 type Query {
-  user(where: UserWhereUniqueInput!): User!
+  user: User!
   academy(where: AcademyWhereUniqueInput!): Academy!
   knowledge(where: KnowledgeWhereUniqueInput!): Knowledge!
   review(where: ReviewWhereUniqueInput!): Review!
   ticket(where: TicketWhereUniqueInput!): Ticket!
-}
-
-input UserWhereUniqueInput {
-  uuid: String
-  email: String
 }
 
 input AcademyWhereUniqueInput {
@@ -141,6 +136,11 @@ input AcademyCreateInput {
 
 input UserCreateNestedOneWithoutAcademyInput {
   connect: UserWhereUniqueInput!
+}
+
+input UserWhereUniqueInput {
+  uuid: String
+  email: String
 }
 
 input KnowledgeCreateInput {
