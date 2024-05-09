@@ -1,7 +1,5 @@
 import * as bcrypt from 'bcrypt';
 
-//import { Role } from '@prisma/client';
-
 import { Injectable } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
@@ -25,28 +23,25 @@ export class AuthService {
     try {
       const user = await this.userService.findOne(
         {
-          where: {
-            email,
-          },
-        },
-        {
           select: {
             id: true,
             uuid: true,
             email: true,
-            // type: true,
-            //username: true,
             firstName: true,
             updatedAt: true,
             createdAt: true,
             lastName: true,
           },
         },
+        {
+          email,
+          sub: '',
+          expiresIn: 0,
+          iat: 0,
+        },
       );
 
-      const userPassword = await this.userService.findUserPassword({
-        where: { email },
-      });
+      const userPassword = await this.userService.findPasswordbyEmail(email);
 
       const valid = await bcrypt.compare(password, userPassword);
 
@@ -57,6 +52,7 @@ export class AuthService {
   }
 
   async login(user: User) {
+    console.log('user', user);
     return {
       access_token: this.jwtService.sign({
         email: user.email,
@@ -70,11 +66,9 @@ export class AuthService {
   }
 
   async signup(signUpInput: SignUpInput, select: UserSelect) {
-    const userPassword = await this.userService.findUserPassword({
-      where: {
-        email: signUpInput.email,
-      },
-    });
+    const userPassword = await this.userService.findPasswordbyEmail(
+      signUpInput.email,
+    );
 
     if (userPassword) {
       throw new Error('User already exists!');
