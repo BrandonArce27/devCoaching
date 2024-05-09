@@ -20,6 +20,7 @@ import { JwtStrategy, LocalStrategy } from './strategy';
     ConfigModule,
     forwardRef(() => UserModule),
     JwtModule.register({
+      global: true,
       secret: process.env.JWT_SECRET,
     }),
   ],
