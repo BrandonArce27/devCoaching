@@ -6,6 +6,8 @@ import { AcademyArgs, AcademyCreateInput } from './dto';
 
 import { PrismaService } from '@services';
 
+// import { AuthUser } from '@/shared/auth';
+
 @Injectable()
 export class AcademyService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -13,6 +15,7 @@ export class AcademyService {
   public async findOne(
     { where }: AcademyArgs,
     { select }: AcademySelect,
+    // user: AuthUser,
   ): Promise<Academy> {
     return this.prismaService.academy.findUnique({
       where,
@@ -23,6 +26,7 @@ export class AcademyService {
   public async create(
     data: AcademyCreateInput,
     { select }: AcademySelect,
+    // user: AuthUser,
   ): Promise<Academy> {
     return this.prismaService.academy.create({
       data,
