@@ -8,8 +8,14 @@ type User {
   email: String
   firstName: String
   lastName: String
+  language: Language
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+enum Language {
+  ENGLISH
+  SPANISH
 }
 
 """
@@ -120,6 +126,7 @@ input SignUpInput {
   password: String!
   firstName: String!
   lastName: String!
+  language: Language
 }
 
 input UserCreateInput {
@@ -127,6 +134,7 @@ input UserCreateInput {
   password: String!
   firstName: String!
   lastName: String!
+  language: Language!
 }
 
 input AcademyCreateInput {
