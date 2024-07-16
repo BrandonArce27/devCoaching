@@ -20,6 +20,7 @@ model User {
   firstName  String          @map("first_name")
   lastName   String          @map("last_name")
   password   String
+  language Language
   updatedAt  DateTime        @updatedAt @map("updated_at")
   createdAt  DateTime        @default(now()) @map("created_at")
   knowledges UserKnowledge[]
@@ -110,4 +111,9 @@ model UserAcademy {
 
   @@id([userId, academyId])
   @@map("users_academies")
+}
+
+enum Language {
+  ENGLISH
+  SPANISH
 }
