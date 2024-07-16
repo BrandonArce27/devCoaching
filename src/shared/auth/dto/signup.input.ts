@@ -2,6 +2,8 @@ import { Field, InputType } from '@nestjs/graphql';
 
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 
+import { Language } from '@prisma/client';
+
 @InputType()
 export class SignUpInput {
   @IsEmail()
@@ -20,4 +22,7 @@ export class SignUpInput {
   @MaxLength(60)
   @Field(() => String)
   lastName: string;
+
+  @Field(() => Language, { nullable: true })
+  language: Language;
 }
